@@ -28,12 +28,11 @@ public class MyshrioApplicationTests {
 
     @Test
     public void dbTest(){
-        SysUser user = null;
         List<SysUser> result =  dsl.select()
                 .from(SYS_USER)
                 .fetch()
                 .into(SysUser.class);
-        log.debug(result.toString());
+        System.out.println(result.toString());
     }
 
 }
