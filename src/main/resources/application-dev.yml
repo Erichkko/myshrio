@@ -24,4 +24,4 @@ spring:
 logging:
   level:
     org:
-      jooq=DEBUG:
+      jooq: DEBUG
