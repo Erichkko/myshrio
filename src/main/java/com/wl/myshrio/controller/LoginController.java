@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping(value = "LoginApi/v1")
 public class LoginController {
@@ -17,10 +20,10 @@ public class LoginController {
     LoginService loginService;
 
     @GetMapping("/login")
-    public String login(String name,String pwd){
+    public String login(String name, String pwd, HttpSession session, HttpServletRequest request){
 //        loginService.login(name,pwd);
 //        loginService.login("1","a123456");
-        loginService.login("11","d477887b0636e5d87f79cc25c99d7dc9");
+        loginService.login("2","d477887b0636e5d87f79cc25c99d7dc9",session,request);
         return "";
     }
 }

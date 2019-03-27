@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         for (Record9 record9:fetch) {
             UserInfoDto userInfoDto = new UserInfoDto();
             userInfoDto.setId( record9.get(SYS_USER.ID));
-            userInfoDto.setRoleName(record9.get( SYS_USER.NICKNAME));
+            userInfoDto.setUsername(record9.get( SYS_USER.NICKNAME));
             userInfoDto.setPassword(record9.get( SYS_USER.PSWD));
             userInfoDto.setUserImg(record9.get( SYS_USER.HEAD_PORTRAITS));
             userInfoDto.setEmail(record9.get( SYS_USER.EMAIL));
