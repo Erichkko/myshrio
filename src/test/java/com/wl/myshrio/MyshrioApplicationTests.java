@@ -28,10 +28,6 @@ public class MyshrioApplicationTests {
 
     @Test
     public void dbTest(){
-         dsl.select()
-                 .from(SYS_USER)
-                 .execute();
-
         SysUser user = null;
         List<SysUser> result =  dsl.select()
                 .from(SYS_USER)
