@@ -23,7 +23,7 @@ public class LoginController {
     public String login(String name, String pwd, HttpSession session, HttpServletRequest request){
 //        loginService.login(name,pwd);
 //        loginService.login("1","a123456");
-        loginService.login("2","d477887b0636e5d87f79cc25c99d7dc9",session,request);
+        loginService.login("1","d477887b0636e5d87f79cc25c99d7dc9",session,request);
         return "";
     }
 }

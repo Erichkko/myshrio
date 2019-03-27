@@ -61,15 +61,7 @@ public class UserServiceImpl implements UserService {
     public void updateById(SysUser user) {
         int execute = dslContext
                 .update(SYS_USER)
-                .set(SYS_USER.ID, user.getId())
-                .set(SYS_USER.CREATE_TIME, user.getCreateTime())
-                .set(SYS_USER.EMAIL, user.getEmail())
-                .set(SYS_USER.HEAD_PORTRAITS, user.getHeadPortraits())
                 .set(SYS_USER.LAST_LOGIN_TIME, user.getLastLoginTime())
-                .set(SYS_USER.CREATE_TIME, user.getCreateTime())
-                .set(SYS_USER.NICKNAME, user.getNickname())
-                .set(SYS_USER.PSWD, user.getPswd())
-                .set(SYS_USER.STATUS, user.getStatus())
                 .where(SYS_USER.ID.eq(user.getId()))
                 .execute();
         log.info("根据用户ID更新用户（1：更新success）"+execute);
