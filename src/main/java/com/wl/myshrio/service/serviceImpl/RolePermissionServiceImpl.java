@@ -39,7 +39,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         } else {
             if (rid == null) {
                 fetch = dslContext.select(
-                        Tables.SYS_ROLE_PERMISSION.ID,
+                        Tables.SYS_PERMISSION.ID,
                         Tables.SYS_PERMISSION.ICONCLS,
                         Tables.SYS_PERMISSION.NAME,
                         Tables.SYS_PERMISSION.URL
@@ -52,7 +52,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
             } else {
                 fetch = dslContext.select(
-                        Tables.SYS_ROLE_PERMISSION.ID,
+                        Tables.SYS_PERMISSION.ID,
                         Tables.SYS_PERMISSION.ICONCLS,
                         Tables.SYS_PERMISSION.NAME,
                         Tables.SYS_PERMISSION.URL
