@@ -32,10 +32,11 @@ public class UserController {
 
     @GetMapping(value = "/findUserByPage")
     public String findUserByPage(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage()-1);
         dto.setType(EnumRoleType.USER.getValue());
         List<UserDto> resultInfo = userService.findUserByPage(dto);
         log.error("resultInfo == "+resultInfo);
-
-        return ResultUtil.result(EnumCode.OK.getValue(),"获取成功！",JSON.toJSON(resultInfo),10 );
+        int total = userService.findUserTotal(dto);
+        return ResultUtil.result(EnumCode.OK.getValue(),"获取成功！",JSON.toJSON(resultInfo),total );
     }
 }

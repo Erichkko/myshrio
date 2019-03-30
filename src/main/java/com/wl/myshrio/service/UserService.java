@@ -11,4 +11,5 @@ public interface UserService {
     List<UserInfoDto> checkUser(String name,String pass);
     void updateById(SysUser user);
     List<UserDto> findUserByPage(ParamsDto dto);
+    Integer findUserTotal(ParamsDto dto) ;
 }
