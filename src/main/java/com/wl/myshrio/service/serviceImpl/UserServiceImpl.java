@@ -4,13 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.Enum.EnumRoleType;
 import com.wl.myshrio.generator.jooq.Tables;
+import com.wl.myshrio.generator.jooq.tables.daos.SysUserDao;
+import com.wl.myshrio.generator.jooq.tables.daos.SysUserRoleDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysUserRole;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.UserDto;
 import com.wl.myshrio.model.dto.UserInfoDto;
+import com.wl.myshrio.model.vo.UserVo;
 import com.wl.myshrio.service.UserService;
 import com.wl.myshrio.utils.LocalDateUtil;
 import com.wl.myshrio.utils.ResultUtil;
+import com.wl.myshrio.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.wl.myshrio.generator.jooq.Tables.*;
@@ -29,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     DSLContext dslContext;
+
 
     @Override
     public List<UserInfoDto> checkUser(String name, String pass) {
@@ -116,7 +123,7 @@ public class UserServiceImpl implements UserService {
                     leftJoin(SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID)).
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
-                    and(SYS_USER.NICKNAME.like("%"+dto.getKeyword()+"%")).
+                    and(SYS_USER.NICKNAME.like("%" + dto.getKeyword() + "%")).
                     limit(dto.getPageSize()).
                     offset(dto.getStartPage()).
                     fetch();
@@ -160,7 +167,7 @@ public class UserServiceImpl implements UserService {
                     from(SYS_USER).
                     leftJoin(SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID)).
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
-                    where(SYS_ROLE.TYPE.eq(dto.getType()), SYS_USER.NICKNAME.like("%"+dto.getKeyword()+"%")).
+                    where(SYS_ROLE.TYPE.eq(dto.getType()), SYS_USER.NICKNAME.like("%" + dto.getKeyword() + "%")).
                     fetchOne(0, Integer.class);
         }
 
@@ -168,5 +175,50 @@ public class UserServiceImpl implements UserService {
         return count;
     }
 
+    @Override
+    public Object addUser(UserVo userVo) {
+        try {
+            SysUser sysUser = new SysUser();
+            sysUser.setId(UUIDUtil.getUUID());
+            sysUser.setLastLoginTime(LocalDateUtil.date2LocalDateTime(new Date()));
+            sysUser.setCreateTime(sysUser.getLastLoginTime());
+            sysUser.setEmail(userVo.getEmail());
+            sysUser.setHeadPortraits("");
+            sysUser.setNickname(userVo.getName());
+            sysUser.setPswd(userVo.getPass());
+            sysUser.setStatus(userVo.getStatus() ? 0L : 1L);
 
+            SysUserRole sysUserRole = new SysUserRole();
+            sysUserRole.setId(UUIDUtil.getUUID())
+            ;
+            sysUserRole.setUid(sysUser.getId());
+            sysUserRole.setRid(userVo.getRole());
+
+            int execute1 = dslContext.insertInto(SYS_USER)
+                    .set(SYS_USER.ID, sysUser.getId())
+                    .set(SYS_USER.STATUS, sysUser.getStatus())
+                    .set(SYS_USER.LAST_LOGIN_TIME, sysUser.getLastLoginTime())
+                    .set(SYS_USER.PSWD, sysUser.getPswd())
+                    .set(SYS_USER.HEAD_PORTRAITS, sysUser.getHeadPortraits())
+                    .set(SYS_USER.EMAIL, sysUser.getEmail())
+                    .set(SYS_USER.CREATE_TIME, sysUser.getCreateTime())
+                    .set(SYS_USER.NICKNAME, sysUser.getNickname()).execute();
+            if (execute1 != 1){
+                return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
+            }
+
+            int execute = dslContext.insertInto(SYS_USER_ROLE)
+                    .set(SYS_USER_ROLE.ID, sysUserRole.getId())
+                    .set(SYS_USER_ROLE.RID, sysUserRole.getRid())
+                    .set(SYS_USER_ROLE.UID, sysUserRole.getUid()).execute();
+            if (execute !=1){
+                return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
+        }
+
+        return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+    }
 }

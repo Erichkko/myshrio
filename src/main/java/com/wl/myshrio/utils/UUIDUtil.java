@@ -34,7 +34,6 @@ public class UUIDUtil {
      */
     public static String randomUUID(){
         String uuid = UUID.randomUUID().toString();
-        //去掉“-”符号
         return uuid;
     }
 }
