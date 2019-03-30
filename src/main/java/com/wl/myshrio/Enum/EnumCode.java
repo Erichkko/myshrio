@@ -43,7 +43,12 @@ public enum EnumCode {
     /**
      * 异常
      */
-    EXCPTION_ERROR(4001, "异常");
+    EXCPTION_ERROR(4001, "异常"),
+
+    /**
+     * 异常
+     */
+    DATA_NULL(4002, "暂无数据");
 
     private final Integer value;
     private final String text;
