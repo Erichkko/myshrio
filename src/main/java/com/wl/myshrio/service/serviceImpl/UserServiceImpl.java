@@ -1,11 +1,6 @@
 package com.wl.myshrio.service.serviceImpl;
 
-import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
-import com.wl.myshrio.Enum.EnumRoleType;
-import com.wl.myshrio.generator.jooq.Tables;
-import com.wl.myshrio.generator.jooq.tables.daos.SysUserDao;
-import com.wl.myshrio.generator.jooq.tables.daos.SysUserRoleDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUserRole;
 import com.wl.myshrio.model.dto.ParamsDto;
@@ -220,5 +215,30 @@ public class UserServiceImpl implements UserService {
         }
 
         return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+    }
+
+    @Override
+    public Object editUserStatus(ParamsDto userVo) {
+
+        int execute = dslContext.update(SYS_USER).set(SYS_USER.STATUS, userVo.getType() == 0 ? 0L : 1L)
+                .where(SYS_USER.ID.eq(userVo.getId())).execute();
+
+        if (execute == 1){
+            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        }else {
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(),EnumCode.EXCPTION_ERROR.getText());
+        }
+    }
+
+    @Override
+    public Object delUsers(ParamsDto userVo) {
+
+
+        for (String id :
+                userVo.getIds()) {
+            dslContext.deleteFrom(SYS_USER).where(SYS_USER.ID.eq(id)).execute();
+        }
+
+        return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
     }
 }

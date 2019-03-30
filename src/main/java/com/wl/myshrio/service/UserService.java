@@ -13,12 +13,7 @@ public interface UserService {
     void updateById(SysUser user);
     List<UserDto> findUserByPage(ParamsDto dto);
     Integer findUserTotal(ParamsDto dto) ;
-    /**
-     * @desc: 新增用户
-     *
-     * @author: jwy
-     * @date: 2017/12/16
-     * @param userVo 用户vo
-     */
     Object addUser(UserVo userVo);
+    Object editUserStatus(ParamsDto userVo);
+    Object delUsers(ParamsDto userVo);
 }
