@@ -186,7 +186,7 @@ public class UserServiceImpl implements UserService {
             sysUser.setHeadPortraits("");
             sysUser.setNickname(userVo.getName());
             sysUser.setPswd(userVo.getPass());
-            sysUser.setStatus(userVo.getStatus() ? 0L : 1L);
+            sysUser.setStatus(!userVo.getStatus() ? 0L : 1L);
 
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setId(UUIDUtil.getUUID())
