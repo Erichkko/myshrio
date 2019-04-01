@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttribute;
 import com.wl.myshrio.model.dto.ParamsDto;
+import com.wl.myshrio.service.AttributeService;
 import com.wl.myshrio.service.SysService;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +23,14 @@ import java.util.List;
 public class SysController {
 
     @Autowired
-    SysService sysService;
+    AttributeService attributeService;
+
+
     @GetMapping(value = "/findAttributesByPage")
     public String findAttributesByPage(ParamsDto dto){
         dto.setStartPage(dto.getStartPage() - 1);
-        List<SysAttribute> list = sysService.findAttributesByPage(dto);
-        Integer total = sysService.findAttributesTotal(dto);
+        List<SysAttribute> list = attributeService.findAttributesByPage(dto);
+        Integer total = attributeService.findAttributesTotal(dto);
         if (null == list || list.size() == 0) {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
@@ -36,7 +39,7 @@ public class SysController {
     @PostMapping(value = "/addAttributes")
     public String addAttributes(SysAttribute attribute){
 
-        Integer integer = sysService.addAttributes(attribute);
+        Integer integer = attributeService.addAttributes(attribute);
         if (integer == 1){
             return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
         }else {
@@ -46,11 +49,17 @@ public class SysController {
     }
     @PostMapping(value = "/delAttributes")
     public String delAttributes(ParamsDto dto){
-        Integer integer = sysService.delAttributes(dto);
+        Integer integer = attributeService.delAttributes(dto);
         if (integer == 1){
             return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
         }else {
             return  ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
         }
+    }
+
+    @GetMapping(value = "/findAttributesDetailByPage")
+    public String findAttributesDetailByPage(ParamsDto dto){
+        return "";
+
     }
 }
