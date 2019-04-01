@@ -44,4 +44,13 @@ public class SysController {
         }
 
     }
+    @PostMapping(value = "/delAttributes")
+    public String delAttributes(ParamsDto dto){
+        Integer integer = sysService.delAttributes(dto);
+        if (integer == 1){
+            return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        }else {
+            return  ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        }
+    }
 }

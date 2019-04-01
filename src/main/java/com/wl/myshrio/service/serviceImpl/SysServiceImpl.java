@@ -1,6 +1,7 @@
 package com.wl.myshrio.service.serviceImpl;
 
 import com.wl.myshrio.generator.jooq.Tables;
+import com.wl.myshrio.generator.jooq.tables.daos.SysAttributeDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttribute;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.service.SysService;
@@ -20,6 +21,9 @@ public class SysServiceImpl implements SysService {
 
     @Autowired
     DSLContext dslContext;
+
+    @Autowired
+    SysAttributeDao sysAttributeDao;
     @Override
     public List<SysAttribute> findAttributesByPage(ParamsDto dto) {
 
@@ -62,9 +66,28 @@ public class SysServiceImpl implements SysService {
     public Integer addAttributes(SysAttribute attribute) {
 
         attribute.setId(UUIDUtil.getUUID());
-        int execute = dslContext.insertInto(Tables.SYS_ATTRIBUTE).set(Tables.SYS_ATTRIBUTE.ID, attribute.getId()).
-                set(Tables.SYS_ATTRIBUTE.NAME, attribute.getName()).execute();
+//        int execute = dslContext.insertInto(Tables.SYS_ATTRIBUTE).set(Tables.SYS_ATTRIBUTE.ID, attribute.getId()).
+//                set(Tables.SYS_ATTRIBUTE.NAME, attribute.getName()).execute();
+        int execute = 0;
 
+        try {
+            sysAttributeDao.insert(attribute);
+            execute = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return execute;
+    }
+
+    @Override
+    public Integer delAttributes(ParamsDto dto) {
+        int flag = 0;
+        try {
+            sysAttributeDao.deleteById(dto.getIds());
+            flag = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 }
