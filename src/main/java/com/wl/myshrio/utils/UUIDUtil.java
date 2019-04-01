@@ -29,12 +29,5 @@ public class UUIDUtil {
         //去掉“-”符号
         return uuid.replaceAll("-", "");
     }
-    /**
-     * 获得一个系统默认UUID
-     * @return String UUID
-     */
-    public static String randomUUID(){
-        String uuid = UUID.randomUUID().toString();
-        return uuid;
-    }
+
 }

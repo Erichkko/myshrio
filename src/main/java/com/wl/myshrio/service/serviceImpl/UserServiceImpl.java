@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()).
+                    offset(dto.getStartPage()*dto.getPageSize()).
                     fetch();
         } else {
             fetch = dslContext.select(SYS_USER.ID,
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
                     and(SYS_USER.NICKNAME.like("%" + dto.getKeyword() + "%")).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()).
+                    offset(dto.getStartPage()*dto.getPageSize()).
                     fetch();
         }
 

@@ -30,7 +30,7 @@ public class AttributeServiceImpl implements AttributeService {
             into= dslContext.select().
                     from(Tables.SYS_ATTRIBUTE).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()).
+                    offset(dto.getStartPage()*dto.getPageSize()).
                     fetch().
                     into(SysAttribute.class);
         }else {
@@ -38,7 +38,7 @@ public class AttributeServiceImpl implements AttributeService {
                     from(Tables.SYS_ATTRIBUTE).
                     where(Tables.SYS_ATTRIBUTE.NAME.like("%"+dto.getKeyword()+"%")).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()).
+                    offset(dto.getStartPage()*dto.getPageSize()).
                     fetch().
                     into(SysAttribute.class);
         }
