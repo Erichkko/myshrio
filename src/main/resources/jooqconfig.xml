@@ -34,7 +34,7 @@
             <javaTimeTypes>true</javaTimeTypes>
             <!--<interfaces>true</interfaces>-->
             <!--不在生成的代码中添加spring注释，比如@Repository-->
-            <springAnnotations>false</springAnnotations>
+            <springAnnotations>true</springAnnotations>
         </generate>
 
         <target>

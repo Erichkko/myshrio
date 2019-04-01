@@ -1,6 +1,7 @@
 package com.wl.myshrio.service.serviceImpl;
 
 import com.wl.myshrio.generator.jooq.Tables;
+import com.wl.myshrio.generator.jooq.tables.daos.SysAttributeDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysPermission;
 import com.wl.myshrio.model.dto.RolePermisDto;
 import com.wl.myshrio.service.RolePermissionService;
@@ -21,6 +22,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Autowired
     DSLContext dslContext;
+
 
     @Override
     public List<RolePermisDto> findRolesPermisByFatherId(String fatherId, String rid) {
@@ -75,6 +77,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
             dto.setUrl(r4.get(Tables.SYS_PERMISSION.URL));
             dtos.add(dto);
         }
+
 
         return dtos;
     }
