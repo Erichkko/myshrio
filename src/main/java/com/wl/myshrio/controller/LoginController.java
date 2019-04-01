@@ -27,13 +27,13 @@ public class LoginController {
         return loginResult;
     }
 
-    @GetMapping("/login")
-    public String login1(String name, String pass, HttpSession session, HttpServletRequest request){
-        String loginResult = loginService.login("admin", "d477887b0636e5d87f79cc25c99d7dc9", session, request);
-//        String loginResult = loginService.login(name, pass, session, request);
-        log.info("loginResult"+loginResult);
-        return loginResult;
-    }
-
+//    @GetMapping("/login")
+//    public String login1(String name, String pass, HttpSession session, HttpServletRequest request){
+//        String loginResult = loginService.login("admin", "d477887b0636e5d87f79cc25c99d7dc9", session, request);
+////        String loginResult = loginService.login(name, pass, session, request);
+//        log.info("loginResult"+loginResult);
+//        return loginResult;
+//    }
+//
 
 }

@@ -4,6 +4,7 @@ import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttribute;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.service.SysService;
+import com.wl.myshrio.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,15 @@ public class SysServiceImpl implements SysService {
                    fetchOne(0,Integer.class);
         }
         return count;
+    }
+
+    @Override
+    public Integer addAttributes(SysAttribute attribute) {
+
+        attribute.setId(UUIDUtil.getUUID());
+        int execute = dslContext.insertInto(Tables.SYS_ATTRIBUTE).set(Tables.SYS_ATTRIBUTE.ID, attribute.getId()).
+                set(Tables.SYS_ATTRIBUTE.NAME, attribute.getName()).execute();
+
+        return execute;
     }
 }

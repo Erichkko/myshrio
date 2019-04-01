@@ -22,6 +22,7 @@ public class UUIDUtil {
     /**
      * 获得一个UUID
      * @return String UUID
+     * 去掉“-”符号
      */
     public static String getUUID(){
         String uuid = UUID.randomUUID().toString();

@@ -9,4 +9,5 @@ public interface SysService {
 
     List<SysAttribute> findAttributesByPage(ParamsDto dto);
     Integer findAttributesTotal(ParamsDto dto);
+    Integer addAttributes(SysAttribute attribute);
 }

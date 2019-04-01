@@ -23,7 +23,7 @@ public class SysController {
 
     @Autowired
     SysService sysService;
-    @GetMapping(value = "findAttributesByPage")
+    @GetMapping(value = "/findAttributesByPage")
     public String findAttributesByPage(ParamsDto dto){
         dto.setStartPage(dto.getStartPage() - 1);
         List<SysAttribute> list = sysService.findAttributesByPage(dto);
@@ -32,5 +32,16 @@ public class SysController {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
         return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(list),total);
+    }
+    @PostMapping(value = "/addAttributes")
+    public String addAttributes(SysAttribute attribute){
+
+        Integer integer = sysService.addAttributes(attribute);
+        if (integer == 1){
+            return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        }else {
+            return  ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        }
+
     }
 }
