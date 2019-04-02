@@ -1,4 +1,4 @@
-package com.wl.myshrio.model.dto;
+package com.wl.myshrio.model.vo;
 
 import org.hibernate.validator.constraints.NotBlank;
 

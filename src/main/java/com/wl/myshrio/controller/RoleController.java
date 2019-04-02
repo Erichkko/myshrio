@@ -92,4 +92,14 @@ public class RoleController {
         }
         return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(arr));
     }
+
+    @PostMapping(value = "/addRolesPermis")
+    public String addRolesPermis(RolePermisVo vo){
+        Integer result = rolePermissionService.addRolesPermis(vo);
+        if (result == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
+        }
+    }
 }

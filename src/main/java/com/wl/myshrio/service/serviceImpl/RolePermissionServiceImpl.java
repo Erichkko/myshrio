@@ -2,11 +2,14 @@ package com.wl.myshrio.service.serviceImpl;
 
 import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.daos.SysAttributeDao;
+import com.wl.myshrio.generator.jooq.tables.daos.SysRolePermissionDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysPermission;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysRolePermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.RolePermisDto;
+import com.wl.myshrio.model.dto.RolePermisVo;
 import com.wl.myshrio.service.RolePermissionService;
+import com.wl.myshrio.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record4;
@@ -24,6 +27,9 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     @Autowired
     DSLContext dslContext;
+
+    @Autowired
+    SysRolePermissionDao sysRolePermissionDao;
 
 
     @Override
@@ -95,5 +101,39 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                 fetch().
                 into(SysRolePermission.class);
         return into;
+    }
+
+    @Override
+    public Integer addRolesPermis(RolePermisVo vo) {
+        List<SysRolePermission> sysRolePermissions = new ArrayList<>();
+        Integer flag = 0;
+        try {
+            dslContext.deleteFrom(Tables.SYS_ROLE_PERMISSION).
+                   where(Tables.SYS_ROLE_PERMISSION.RID.eq(vo.getRoleId()));
+            flag = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] permisIds = vo.getPermiIds() == null ? new String[0] : vo.getPermiIds();
+        if (permisIds.length == 0) {
+            return flag;
+        }
+
+        for (String v : permisIds) {
+            SysRolePermission sysRolePermission = new SysRolePermission();
+            sysRolePermission.setId(UUIDUtil.getUUID());
+            sysRolePermission.setPid(v);
+            sysRolePermission.setRid(vo.getRoleId());
+            sysRolePermissions.add(sysRolePermission);
+        }
+
+
+        try {
+            sysRolePermissionDao.insert(sysRolePermissions);
+            flag = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 }
