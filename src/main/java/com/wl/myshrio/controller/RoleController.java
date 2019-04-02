@@ -4,12 +4,15 @@ package com.wl.myshrio.controller;
 import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysRole;
+import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.RolePermisVo;
 import com.wl.myshrio.service.RoleService;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value =  "RoleApi/v1")
+@RequestMapping(value = "RoleApi/v1")
 public class RoleController {
 
     @Autowired
@@ -32,8 +35,44 @@ public class RoleController {
      */
     @RequestMapping(value = "/findAllRoles")
     public String findAllRoles(RolePermisVo vo, BindingResult bindingResult) {
-        List<SysRole> list = roleService.findAllRoles();
+        List<SysRole> roles = roleService.findAllRoles();
 
-        return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list));
+        if (roles != null && roles.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(roles));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
+        }
     }
+
+    @GetMapping(value = "/findRoleByPage")
+    public String findRoleByPage(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage() - 1);
+        List<SysRole> roles = roleService.findRoleByPage(dto);
+        if (roles != null && roles.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(roles),roleService.findRoleTotal(dto));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
+        }
+    }
+
+    @PostMapping(value = "/addRoles")
+    public  String addRoles(SysRole role){
+        Integer result = roleService.addRoles(role);
+        if (result == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
+        }
+    }
+
+    @PostMapping(value = "/delRoles")
+    public String delRoles(ParamsDto dto){
+        Integer result = roleService.delRoles(dto);
+        if (result == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
+        }
+    }
+
 }
