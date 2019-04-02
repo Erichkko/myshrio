@@ -3,6 +3,7 @@ package com.wl.myshrio.service.serviceImpl;
 import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.daos.SysRoleDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysRole;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysRolePermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.service.RoleService;
 import com.wl.myshrio.utils.UUIDUtil;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import sun.plugin.util.UIUtil;
+import sun.tools.jconsole.Tab;
 
 import java.util.List;
 
@@ -94,4 +96,6 @@ public class RoleServiceImpl implements RoleService {
         }
         return flag;
     }
+
+
 }

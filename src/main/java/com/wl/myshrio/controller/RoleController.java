@@ -4,8 +4,10 @@ package com.wl.myshrio.controller;
 import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysRole;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysRolePermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.RolePermisVo;
+import com.wl.myshrio.service.RolePermissionService;
 import com.wl.myshrio.service.RoleService;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,9 @@ public class RoleController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    RolePermissionService rolePermissionService;
 
     /**
      * 绑定角色下拉框
@@ -75,4 +80,16 @@ public class RoleController {
         }
     }
 
+    @GetMapping(value = "/findRolesPermisByRole")
+    public String findRolesPermisByRole(ParamsDto dto){
+        if (null == dto.getId()) {
+            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(), EnumCode.BAD_REQUEST.getText());
+        }
+        List<SysRolePermission> list = rolePermissionService.findRolesPermisByRole(dto);
+        String[] arr = new String[list.size()];
+        for (int i = 0,j=list.size(); i < j; i++) {
+            arr[i] = list.get(i).getPid();
+        }
+        return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(arr));
+    }
 }

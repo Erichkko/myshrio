@@ -1,6 +1,7 @@
 package com.wl.myshrio.service;
 
 import com.wl.myshrio.generator.jooq.tables.pojos.SysRole;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysRolePermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface RoleService {
     Integer addRoles(SysRole role);
 
     Integer delRoles(ParamsDto dto);
+
+
 }

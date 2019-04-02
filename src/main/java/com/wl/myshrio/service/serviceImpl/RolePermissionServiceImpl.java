@@ -3,6 +3,8 @@ package com.wl.myshrio.service.serviceImpl;
 import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.daos.SysAttributeDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysPermission;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysRolePermission;
+import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.RolePermisDto;
 import com.wl.myshrio.service.RolePermissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -80,5 +82,18 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
 
         return dtos;
+    }
+
+    @Override
+    public List<SysRolePermission> findRolesPermisByRole(ParamsDto dto) {
+
+        List<SysRolePermission> into = dslContext.select(Tables.SYS_ROLE_PERMISSION.ID, Tables.SYS_ROLE_PERMISSION.PID, Tables.SYS_ROLE_PERMISSION.RID).
+                from(Tables.SYS_ROLE_PERMISSION).
+                leftJoin(Tables.SYS_ROLE).
+                on(Tables.SYS_ROLE.ID.eq(Tables.SYS_ROLE_PERMISSION.RID)).
+                where(Tables.SYS_ROLE.ID.eq(dto.getId())).
+                fetch().
+                into(SysRolePermission.class);
+        return into;
     }
 }
