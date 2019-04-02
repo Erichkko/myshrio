@@ -1,6 +1,7 @@
 package com.wl.myshrio.service.serviceImpl;
 
 import com.wl.myshrio.Enum.EnumCode;
+import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUserRole;
 import com.wl.myshrio.model.dto.ParamsDto;
@@ -44,10 +45,10 @@ public class UserServiceImpl implements UserService {
                         SYS_USER_ROLE.RID,
                         SYS_ROLE.NAME,
                         SYS_ROLE.TYPE)
-                .from(SYS_USER)
-                .leftJoin(SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID))
-                .innerJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID))
-                .where(SYS_USER.NICKNAME.eq(name), SYS_USER.PSWD.eq(pass)).fetch();
+                .from(Tables.SYS_USER)
+                .leftJoin(Tables.SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID))
+                .innerJoin(Tables.SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID))
+                .where(Tables.SYS_USER.NICKNAME.eq(name), SYS_USER.PSWD.eq(pass)).fetch();
         List<UserInfoDto> userInfoDtos = new ArrayList<>();
         for (Record9 record9 : fetch) {
             UserInfoDto userInfoDto = new UserInfoDto();

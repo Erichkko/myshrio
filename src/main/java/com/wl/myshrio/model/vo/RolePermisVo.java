@@ -1,6 +1,5 @@
 package com.wl.myshrio.model.vo;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @desc: 角色权限vo
