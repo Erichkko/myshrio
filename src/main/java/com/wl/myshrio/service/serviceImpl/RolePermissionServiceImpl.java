@@ -108,8 +108,10 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         List<SysRolePermission> sysRolePermissions = new ArrayList<>();
         Integer flag = 0;
         try {
-            dslContext.deleteFrom(Tables.SYS_ROLE_PERMISSION).
-                   where(Tables.SYS_ROLE_PERMISSION.RID.eq(vo.getRoleId()));
+            dslContext.delete(Tables.SYS_ROLE_PERMISSION).
+                   where(Tables.SYS_ROLE_PERMISSION.RID.eq(vo.getRoleId()))
+                    .execute();
+
             flag = 1;
         } catch (Exception e) {
             e.printStackTrace();
