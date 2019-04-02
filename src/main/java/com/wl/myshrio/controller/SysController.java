@@ -13,6 +13,7 @@ import com.wl.myshrio.service.SysService;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,5 +102,20 @@ public class SysController {
             return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
 
         }
+    }
+
+    @GetMapping(value = "/findAttributeDetailByAttrId")
+    public String findAttributeDetailByAttrId(ParamsDto dto){
+        if (StringUtils.isEmpty(dto.getId())){
+            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(),EnumCode.BAD_REQUEST.getText());
+        }
+        List<SysAttributeDetail> list = attributeDetailService.findAttributeDetailByAttrId(dto);
+
+        if (list != null && list.size()>0){
+            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list));
+        }else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        }
+
     }
 }

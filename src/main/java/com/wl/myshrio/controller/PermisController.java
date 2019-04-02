@@ -24,7 +24,7 @@ public class PermisController {
     @Autowired
     PermisService permisService;
 
-    @RequestMapping(value = "/findBasePermission")
+    @GetMapping(value = "/findBasePermission")
     public String findBasePermission(){
 
         List<PermisDto> list = permisService.findBasePermission();
@@ -41,6 +41,17 @@ public class PermisController {
         List<PermissionVo> list = permisService.findPermissionByPage(dto);
         if (list != null&&list.size()>0){
             return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(list),permisService.findPermissionTotal(dto));
+        }else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        }
+    }
+    @GetMapping(value = "/findLastPermissionByType")
+    public String findLastPermissionByType(String type){
+        ParamsDto dto1 = new ParamsDto();
+        dto1.setId(type);
+        List<PermissionVo> voList = permisService.findLastPermissionByType(dto1);
+        if (voList != null&&voList.size()>0){
+            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(voList));
         }else {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
         }

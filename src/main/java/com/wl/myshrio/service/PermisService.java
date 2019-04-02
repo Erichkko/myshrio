@@ -11,6 +11,7 @@ public interface PermisService {
 
     List<PermissionVo> findPermissionByPage(ParamsDto dto);
 
-
     Integer findPermissionTotal(ParamsDto dto);
+
+    List<PermissionVo> findLastPermissionByType(ParamsDto dto);
 }

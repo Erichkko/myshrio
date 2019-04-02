@@ -67,4 +67,10 @@ public class AttributeDetailServiceImpl implements AttributeDetailService {
         }
         return flag;
     }
+
+    @Override
+    public List<SysAttributeDetail> findAttributeDetailByAttrId(ParamsDto dto) {
+        List<SysAttributeDetail> sysAttributeDetails = sysAttributeDetailDao.fetchByAttrid(dto.getId());
+        return sysAttributeDetails;
+    }
 }

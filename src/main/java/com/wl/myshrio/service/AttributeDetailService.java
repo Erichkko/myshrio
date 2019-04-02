@@ -11,5 +11,6 @@ public interface AttributeDetailService {
     Integer findAttributesDetailTotal(ParamsDto dto);
     Integer addAttributeDetail(AttributeDetailVo vo);
     Integer delAttributeDetails(ParamsDto dto);
+    List<SysAttributeDetail> findAttributeDetailByAttrId(ParamsDto dto);
 
 }

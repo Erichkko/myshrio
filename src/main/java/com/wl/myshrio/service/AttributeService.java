@@ -10,4 +10,5 @@ public interface AttributeService {
     Integer findAttributesTotal(ParamsDto dto);
     Integer addAttributes(SysAttribute attribute);
     Integer delAttributes(ParamsDto attribute);
+
 }

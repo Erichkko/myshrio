@@ -1,5 +1,6 @@
 package com.wl.myshrio;
 
+import com.wl.myshrio.generator.jooq.Tables;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
@@ -11,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static com.wl.myshrio.generator.jooq.Tables.SYS_USER;
 
 
 @Slf4j
@@ -29,7 +29,7 @@ public class MyshrioApplicationTests {
     @Test
     public void dbTest(){
         List<SysUser> result =  dsl.select()
-                .from(SYS_USER)
+                .from(Tables.SYS_USER)
                 .fetch()
                 .into(SysUser.class);
         System.out.println(result.toString());

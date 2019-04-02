@@ -127,4 +127,18 @@ public class PermisServiceImpl implements PermisService {
         }
         return total;
     }
+
+    @Override
+    public List<PermissionVo> findLastPermissionByType(ParamsDto dto) {
+
+        List<PermissionVo> list = dslContext.select(Tables.SYS_PERMISSION.NAME,Tables.SYS_PERMISSION.ID).
+                from(Tables.SYS_PERMISSION).
+                where(Tables.SYS_PERMISSION.TYPE.eq(dto.getId())).
+                fetch().
+                into(PermissionVo.class);
+
+
+
+        return list;
+    }
 }
