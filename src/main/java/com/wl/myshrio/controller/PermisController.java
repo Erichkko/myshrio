@@ -6,11 +6,13 @@ import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysPermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.PermisDto;
+import com.wl.myshrio.model.vo.PermisVo;
 import com.wl.myshrio.model.vo.PermissionVo;
 import com.wl.myshrio.service.PermisService;
 import com.wl.myshrio.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +56,27 @@ public class PermisController {
             return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(voList));
         }else {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        }
+    }
+
+    @PostMapping(value = "/addPermissions")
+    public String addPermissions(PermisVo vo){
+        Integer result = permisService.addPermissions(vo);
+        if (result == 1){
+            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        }else {
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(),EnumCode.EXCPTION_ERROR.getText());
+        }
+    }
+
+
+    @PostMapping(value = "/delPermis")
+    public String delPermis(ParamsDto dto){
+        Integer result = permisService.delPermis(dto);
+        if (result == 1){
+            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        }else {
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(),EnumCode.EXCPTION_ERROR.getText());
         }
     }
 }

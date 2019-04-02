@@ -5,8 +5,11 @@ import com.wl.myshrio.generator.jooq.tables.daos.SysPermissionDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysPermission;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.PermisDto;
+import com.wl.myshrio.model.vo.PermisVo;
 import com.wl.myshrio.model.vo.PermissionVo;
 import com.wl.myshrio.service.PermisService;
+import com.wl.myshrio.utils.LocalDateUtil;
+import com.wl.myshrio.utils.UUIDUtil;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -137,8 +141,43 @@ public class PermisServiceImpl implements PermisService {
                 fetch().
                 into(PermissionVo.class);
 
-
-
         return list;
+    }
+
+    @Override
+    public Integer addPermissions(PermisVo vo) {
+
+        SysPermission sysPermission = new SysPermission();
+        sysPermission.setCreateTime(LocalDateUtil.date2LocalDateTime(new Date()));
+        sysPermission.setUpdateTime(sysPermission.getCreateTime());
+        sysPermission.setFatherid(vo.getLastId());
+        sysPermission.setName(vo.getName());
+        sysPermission.setType(vo.getType());
+        sysPermission.setCreater(vo.getUserName());
+        sysPermission.setUrl(vo.getUrl());
+        sysPermission.setId(UUIDUtil.getUUID());
+
+        Integer  flag = 0;
+        try {
+            sysPermissionDao.insert(sysPermission);
+            flag = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    @Override
+    public Integer delPermis(ParamsDto vo) {
+
+        Integer flag = 0;
+        try {
+            sysPermissionDao.deleteById(vo.getIds());
+            flag = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return flag;
     }
 }
