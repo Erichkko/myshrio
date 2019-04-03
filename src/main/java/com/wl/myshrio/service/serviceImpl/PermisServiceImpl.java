@@ -17,6 +17,7 @@ import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -167,12 +168,13 @@ public class PermisServiceImpl implements PermisService {
         return flag;
     }
 
+    @Transactional
     @Override
     public Integer delPermis(ParamsDto vo) {
 
         Integer flag = 0;
         try {
-            sysPermissionDao.deleteById(vo.getIds());
+            sysPermissionDao.deleteById();
             flag = 1;
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttribute;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttributeDetail;
+import com.wl.myshrio.model.dto.LoginTotalDto;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.vo.AttributeDetailVo;
+import com.wl.myshrio.model.vo.LoginLogVo;
 import com.wl.myshrio.service.AttributeDetailService;
 import com.wl.myshrio.service.AttributeService;
+import com.wl.myshrio.service.LoginLogService;
 import com.wl.myshrio.service.SysService;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,9 @@ public class SysController {
 
     @Autowired
     AttributeDetailService attributeDetailService;
+
+    @Autowired
+    LoginLogService loginLogService;
 
 
     @GetMapping(value = "/findAttributesByPage")
@@ -94,6 +100,7 @@ public class SysController {
 
     @PostMapping(value = "/delAttributeDetails")
     public String delAttributeDetails(ParamsDto dto){
+        dto.setStartPage(dto.getStartPage()-1);
         Integer result = attributeDetailService.delAttributeDetails(dto);
         if (result == 1){
             return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
@@ -117,5 +124,29 @@ public class SysController {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
         }
 
+    }
+
+    @GetMapping(value = "/findUserLoginTotal")
+    public String findUserLoginTotal(){
+
+        List<LoginTotalDto> list = loginLogService.findUserLoginTotal();
+
+        if (list != null && list.size()>0){
+            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list));
+        }else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        }
+    }
+
+    @GetMapping(value = "/findUserLoginLogByPage")
+    public String findUserLoginLogByPage(ParamsDto dto){
+        dto.setStartPage(dto.getStartPage()-1);
+        List<LoginLogVo> list = loginLogService.findUserLoginLogByPage(dto);
+
+        if (list != null && list.size()>0){
+            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list),loginLogService.findUserLoginLogTotalByDto(dto));
+        }else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText(),null,0);
+        }
     }
 }

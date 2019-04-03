@@ -233,13 +233,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Object delUsers(ParamsDto userVo) {
-
-
-        for (String id :
-                userVo.getIds()) {
+        for (String id : userVo.getIds()) {
             dslContext.deleteFrom(SYS_USER).where(SYS_USER.ID.eq(id)).execute();
         }
 
         return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
     }
+
 }
