@@ -56,10 +56,11 @@ public class LoginLogServiceImpl implements LoginLogService {
     public List<LoginTotalDto> findUserLoginTotal() {
 
         List<LoginLogVo> loignList = dslContext.select(Tables.SYS_USER.ID,
-                Tables.SYS_USER.NICKNAME.as("name"),
-                SYS_LOGIN_LOG.LOGINTOTAL).
+                Tables.SYS_USER.NICKNAME.as("userName"),
+                DSL.max(SYS_LOGIN_LOG.LOGINTOTAL).as("loginTotal")).
                 from(Tables.SYS_USER).
-                leftJoin(SYS_LOGIN_LOG).on(SYS_LOGIN_LOG.UID.eq(Tables.SYS_USER.ID)).
+                innerJoin(SYS_LOGIN_LOG).on(SYS_LOGIN_LOG.UID.eq(Tables.SYS_USER.ID)).
+                groupBy(SYS_USER.ID).
                 fetch().
                 into(LoginLogVo.class);
 

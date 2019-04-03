@@ -58,6 +58,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                         rightJoin(Tables.SYS_PERMISSION).
                         on(Tables.SYS_ROLE_PERMISSION.PID.eq(Tables.SYS_PERMISSION.ID)).
                         where(Tables.SYS_PERMISSION.FATHERID.eq(fatherId)).
+                        groupBy(Tables.SYS_PERMISSION.ID).
                         fetch();
 
             } else {
@@ -71,6 +72,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                         rightJoin(Tables.SYS_ROLE_PERMISSION).
                         on(Tables.SYS_ROLE_PERMISSION.PID.eq(Tables.SYS_PERMISSION.ID)).
                         where(Tables.SYS_PERMISSION.FATHERID.eq(fatherId), Tables.SYS_ROLE_PERMISSION.RID.eq(rid)).
+                        groupBy(Tables.SYS_PERMISSION.ID).
                         fetch();
             }
 

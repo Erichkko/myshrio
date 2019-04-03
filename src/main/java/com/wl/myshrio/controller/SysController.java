@@ -149,4 +149,9 @@ public class SysController {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText(),null,0);
         }
     }
+
+    @GetMapping(value = "/findUserReqTotal")
+    public String findUserReqTotal(){
+        return "";
+    }
 }

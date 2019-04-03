@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SysService {
 
+    String findUserReqTotal();
 
 }
