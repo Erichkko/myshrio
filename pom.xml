@@ -76,6 +76,11 @@
             <artifactId>jooq-codegen</artifactId>
         </dependency>
 
+        <!-- AOP处理 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 
         <!-- 热部署 -->
         <dependency>
