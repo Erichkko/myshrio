@@ -182,4 +182,9 @@ public class PermisServiceImpl implements PermisService {
 
         return flag;
     }
+
+    @Override
+    public Integer findCountByUrl(String url) {
+       return sysPermissionDao.fetchByUrl(url).size();
+    }
 }

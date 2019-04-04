@@ -20,4 +20,7 @@ public interface PermisService {
 
 
     Integer  delPermis(ParamsDto vo);
+
+
+    Integer  findCountByUrl(String url);
 }

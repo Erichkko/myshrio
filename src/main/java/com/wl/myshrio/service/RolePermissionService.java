@@ -19,4 +19,6 @@ public interface RolePermissionService {
     List<SysRolePermission> findRolesPermisByRole(ParamsDto dto);
 
     Integer addRolesPermis(RolePermisVo vo);
+
+    Integer findCountByRole(String roleId,String url);
 }

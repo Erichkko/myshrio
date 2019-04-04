@@ -3,8 +3,14 @@ package com.wl.myshrio.aspect;
 
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.controller.base.BaseApi;
+import com.wl.myshrio.exception.MyException;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysOperatingRecord;
+import com.wl.myshrio.service.OperatingRecordService;
+import com.wl.myshrio.service.PermisService;
 import com.wl.myshrio.service.RolePermissionService;
+import com.wl.myshrio.utils.LocalDateUtil;
 import com.wl.myshrio.utils.ResultUtil;
+import com.wl.myshrio.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -25,24 +31,22 @@ import java.util.Date;
 
 /**
  * @desc: Aspect
- *
  * @author: jwy
  * @date: 2017/12/15
  */
 @Aspect
 @Component
-@Order(1)
 @Slf4j
 public class HttpAspect extends BaseApi {
 
     @Autowired
-     RolePermissionService rolePermissionService;
+    RolePermissionService rolePermissionService;
 
     @Autowired
-//    private PermissionService permissionService;
+    private PermisService permisService;
 //
-//    @Autowired
-//    private OperatingRecordService operatingRecordService;
+    @Autowired
+    private OperatingRecordService operatingRecordService;
 
 
 //    @Pointcut("execution(public * com.wl.myshrio.controller..*(..))")
@@ -50,9 +54,9 @@ public class HttpAspect extends BaseApi {
     public void log() {
 
     }
+
     /**
      * @desc: 记录请求
-     *
      * @author: jwy
      * @date: 2017/12/15
      */
@@ -63,7 +67,6 @@ public class HttpAspect extends BaseApi {
 
     /**
      * @desc: 响应请求
-     *
      * @author: jwy
      * @date: 2017/12/15
      */
@@ -74,19 +77,17 @@ public class HttpAspect extends BaseApi {
 
     /**
      * @desc: 打印返回值
-     *
      * @author: jwy
      * @date: 2017/12/15
      */
-    @AfterReturning(returning = "obj",pointcut = "log()")
+    @AfterReturning(returning = "obj", pointcut = "log()")
     public void doAfterReturnning(Object obj) {
-         log.info("请求返回值：{}",obj);
+        log.info("请求返回值：{}", obj);
     }
 
 
     /**
      * @desc: 统一参数验证处理
-     *
      * @author: jwy
      * @date: 2017/12/15
      */
@@ -97,7 +98,7 @@ public class HttpAspect extends BaseApi {
 
         Object retVal;
         if (bindingResult.hasErrors()) {
-            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(),bindingResult.getFieldError().getDefaultMessage(),null);
+            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(), bindingResult.getFieldError().getDefaultMessage(), null);
         } else {
             retVal = pjp.proceed();
         }
@@ -106,54 +107,55 @@ public class HttpAspect extends BaseApi {
 
     /**
      * @desc: 请求拦截器
-     *
      * @author: jwy
      * @date: 2017/12/28
      */
-    public void shiroFilter(JoinPoint joinPoint){
+    public void shiroFilter(JoinPoint joinPoint) {
 
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
 
         String requestUrl = request.getRequestURI().replaceAll(request.getContextPath(), "");
-            String remoteAddr = request.getRemoteAddr();
-            String method = request.getMethod();
-            String args = Arrays.toString(joinPoint.getArgs());
+        String remoteAddr = request.getRemoteAddr();
+        String method = request.getMethod();
+        String args = Arrays.toString(joinPoint.getArgs());
 
         log.info("========================== ↓收到请求↓ ==========================");
-        log.info("请求url:{}",requestUrl);
-        log.info("请求源ip:{}",remoteAddr);
-        log.info("请求方式:{}",method);
-       // log.info("请求方法:{}",joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName()+ "()");
+        log.info("请求url:{}", requestUrl);
+        log.info("请求源ip:{}", remoteAddr);
+        log.info("请求方式:{}", method);
+        // log.info("请求方法:{}",joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName()+ "()");
         log.info("请求参数:{}", args);
-        log.info("getContextPath:{}",request.getContextPath());
+        log.info("getContextPath:{}", request.getContextPath());
         log.info("========================== ↑收到请求↑ ==========================");
 
-//        OperatingRecord or = new OperatingRecord();
-//        or.setRequestUrl(requestUrl);
-//        or.setRemoteAddr(remoteAddr);
-//        or.setMethod(method);
-//        or.setParams(args);
-//        or.setCreateTime(new Date());
-//        or.setUid(super.getUserId());
+        SysOperatingRecord or = new SysOperatingRecord();
+        or.setId(UUIDUtil.getUUID());
+        or.setRequesturl(requestUrl);
+        or.setRemoteaddr(remoteAddr);
+        or.setMethod(method);
+        or.setParams(args);
+        or.setCreateTime(LocalDateUtil.date2LocalDateTime(new Date()));
+        or.setUid(super.getUserId());
 //
-//        Integer count = permissionService.findCountByUrl(requestUrl);
-//        if (count != 0){
-//            String roleId = super.getRoleId();
-//            if (StringUtils.isEmpty(roleId)) {
-//                or.setFlag("授权不通过");
-//                operatingRecordService.insert(or);
-//                throw new MyException(ResultUtil.result(EnumCode.FORBIDDEN.getValue(), EnumCode.FORBIDDEN.getText()));
-//            }
-//
-//            Integer row = rolePermissionService.findCountByRole(roleId, request.getRequestURI().replaceAll(request.getContextPath(),""));
-//            if (row == 0 && !super.getRoleName().equals("admin")) {
-//                or.setFlag("授权不通过");
-//                operatingRecordService.insert(or);
-//                throw new MyException(ResultUtil.result(EnumCode.FORBIDDEN.getValue(), EnumCode.FORBIDDEN.getText()));
-//            }
-//        }
-//        or.setFlag("授权通过");
-//        operatingRecordService.insert(or);
+        Integer count = permisService.findCountByUrl(requestUrl);
+        log.info("count === "+count);
+        if (count != 0){
+            String roleId = super.getRoleId();
+            if (StringUtils.isEmpty(roleId)) {
+                or.setFlag("授权不通过");
+                operatingRecordService.insert(or);
+                throw new MyException(ResultUtil.result(EnumCode.FORBIDDEN.getValue(), EnumCode.FORBIDDEN.getText()));
+            }
+
+            Integer row = rolePermissionService.findCountByRole(roleId, request.getRequestURI().replaceAll(request.getContextPath(),""));
+            if (row == 0 && !super.getRoleName().equals("admin")) {
+                or.setFlag("授权不通过");
+                operatingRecordService.insert(or);
+                throw new MyException(ResultUtil.result(EnumCode.FORBIDDEN.getValue(), EnumCode.FORBIDDEN.getText()));
+            }
+        }
+        or.setFlag("授权通过");
+        operatingRecordService.insert(or);
     }
 }
