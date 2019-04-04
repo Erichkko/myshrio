@@ -5,14 +5,14 @@ import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttribute;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysAttributeDetail;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysOperatingRecord;
 import com.wl.myshrio.model.dto.LoginTotalDto;
 import com.wl.myshrio.model.dto.ParamsDto;
+import com.wl.myshrio.model.dto.RequstOprDto;
 import com.wl.myshrio.model.vo.AttributeDetailVo;
 import com.wl.myshrio.model.vo.LoginLogVo;
-import com.wl.myshrio.service.AttributeDetailService;
-import com.wl.myshrio.service.AttributeService;
-import com.wl.myshrio.service.LoginLogService;
-import com.wl.myshrio.service.SysService;
+import com.wl.myshrio.model.vo.OperatingRecordVo;
+import com.wl.myshrio.service.*;
 import com.wl.myshrio.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,121 +37,144 @@ public class SysController {
     @Autowired
     AttributeDetailService attributeDetailService;
 
+
+    @Autowired
+    OperatingRecordService operatingRecordService;
+
     @Autowired
     LoginLogService loginLogService;
 
 
     @GetMapping(value = "/findAttributesByPage")
-    public String findAttributesByPage(ParamsDto dto){
+    public String findAttributesByPage(ParamsDto dto) {
         dto.setStartPage(dto.getStartPage() - 1);
         List<SysAttribute> list = attributeService.findAttributesByPage(dto);
         Integer total = attributeService.findAttributesTotal(dto);
         if (null == list || list.size() == 0) {
             return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
-        return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(), JSON.toJSON(list),total);
+        return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list), total);
     }
+
     @PostMapping(value = "/addAttributes")
-    public String addAttributes(SysAttribute attribute){
+    public String addAttributes(SysAttribute attribute) {
 
         Integer integer = attributeService.addAttributes(attribute);
-        if (integer == 1){
-            return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
-        }else {
-            return  ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        if (integer == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
         }
 
     }
+
     @PostMapping(value = "/delAttributes")
-    public String delAttributes(ParamsDto dto){
+    public String delAttributes(ParamsDto dto) {
         Integer integer = attributeService.delAttributes(dto);
-        if (integer == 1){
-            return  ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
-        }else {
-            return  ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        if (integer == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
         }
     }
 
     @GetMapping(value = "/findAttributesDetailByPage")
-    public String findAttributesDetailByPage(ParamsDto dto){
-        dto.setStartPage(dto.getStartPage()-1);
+    public String findAttributesDetailByPage(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage() - 1);
         List<SysAttributeDetail> attributesDetailByPage = attributeDetailService.findAttributesDetailByPage(dto);
-        if (attributesDetailByPage != null && attributesDetailByPage.size()>0){
-          return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(attributesDetailByPage),attributeDetailService.findAttributesDetailTotal(dto));
-        }else {
-           return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        if (attributesDetailByPage != null && attributesDetailByPage.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(attributesDetailByPage), attributeDetailService.findAttributesDetailTotal(dto));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
 
     }
 
     @PostMapping(value = "/addAttributeDetail")
-    public String addAttributeDetail(AttributeDetailVo vo){
+    public String addAttributeDetail(AttributeDetailVo vo) {
 
         Integer result = attributeDetailService.addAttributeDetail(vo);
-        if (result == 1){
-            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        if (result == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
 
-        }else {
-            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
 
         }
 
     }
 
     @PostMapping(value = "/delAttributeDetails")
-    public String delAttributeDetails(ParamsDto dto){
-        dto.setStartPage(dto.getStartPage()-1);
+    public String delAttributeDetails(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage() - 1);
         Integer result = attributeDetailService.delAttributeDetails(dto);
-        if (result == 1){
-            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        if (result == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
 
-        }else {
-            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(),EnumCode.INTERNAL_SERVER_ERROR.getText());
+        } else {
+            return ResultUtil.result(EnumCode.INTERNAL_SERVER_ERROR.getValue(), EnumCode.INTERNAL_SERVER_ERROR.getText());
 
         }
     }
 
     @GetMapping(value = "/findAttributeDetailByAttrId")
-    public String findAttributeDetailByAttrId(ParamsDto dto){
-        if (StringUtils.isEmpty(dto.getId())){
-            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(),EnumCode.BAD_REQUEST.getText());
+    public String findAttributeDetailByAttrId(ParamsDto dto) {
+        if (StringUtils.isEmpty(dto.getId())) {
+            return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(), EnumCode.BAD_REQUEST.getText());
         }
         List<SysAttributeDetail> list = attributeDetailService.findAttributeDetailByAttrId(dto);
 
-        if (list != null && list.size()>0){
-            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list));
-        }else {
-            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        if (list != null && list.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
 
     }
 
     @GetMapping(value = "/findUserLoginTotal")
-    public String findUserLoginTotal(){
+    public String findUserLoginTotal() {
 
         List<LoginTotalDto> list = loginLogService.findUserLoginTotal();
 
-        if (list != null && list.size()>0){
-            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list));
-        }else {
-            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText());
+        if (list != null && list.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText());
         }
     }
 
     @GetMapping(value = "/findUserLoginLogByPage")
-    public String findUserLoginLogByPage(ParamsDto dto){
-        dto.setStartPage(dto.getStartPage()-1);
+    public String findUserLoginLogByPage(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage() - 1);
         List<LoginLogVo> list = loginLogService.findUserLoginLogByPage(dto);
 
-        if (list != null && list.size()>0){
-            return   ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText(),  JSON.toJSON(list),loginLogService.findUserLoginLogTotalByDto(dto));
-        }else {
-            return ResultUtil.result(EnumCode.DATA_NULL.getValue(),EnumCode.DATA_NULL.getText(),null,0);
+        if (list != null && list.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list), loginLogService.findUserLoginLogTotalByDto(dto));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText(), null, 0);
         }
     }
 
     @GetMapping(value = "/findUserReqTotal")
-    public String findUserReqTotal(){
-        return "";
+    public String findUserReqTotal() {
+        List<RequstOprDto> list = operatingRecordService.findUserReqTotal();
+        if (list != null && list.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText(), null, 0);
+        }
+    }
+
+    @GetMapping(value = "/findOperatingRecordByPage")
+    public String findOperatingRecordByPage(ParamsDto dto) {
+        dto.setStartPage(dto.getStartPage() - 1);
+        List<OperatingRecordVo> list = operatingRecordService.findOperatingRecordByPage(dto);
+
+        if (list != null && list.size() > 0) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText(), JSON.toJSON(list), operatingRecordService.findOperatingRecordTotal(dto));
+        } else {
+            return ResultUtil.result(EnumCode.DATA_NULL.getValue(), EnumCode.DATA_NULL.getText(), null, 0);
+        }
     }
 }
