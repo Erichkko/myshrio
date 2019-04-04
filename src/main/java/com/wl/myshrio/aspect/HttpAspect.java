@@ -5,12 +5,14 @@ import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.controller.base.BaseApi;
 import com.wl.myshrio.service.RolePermissionService;
 import com.wl.myshrio.utils.ResultUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -29,10 +31,12 @@ import java.util.Date;
  */
 @Aspect
 @Component
+@Order(1)
+@Slf4j
 public class HttpAspect extends BaseApi {
 
     @Autowired
-    private RolePermissionService rolePermissionService;
+     RolePermissionService rolePermissionService;
 
     @Autowired
 //    private PermissionService permissionService;
@@ -40,9 +44,9 @@ public class HttpAspect extends BaseApi {
 //    @Autowired
 //    private OperatingRecordService operatingRecordService;
 
-    private final static Logger log = LoggerFactory.getLogger(HttpAspect.class);
 
-    @Pointcut("execution(public * com.wl.myshrio.controller..*(..))")
+//    @Pointcut("execution(public * com.wl.myshrio.controller..*(..))")
+    @Pointcut("within(com.wl.myshrio.controller..*)")
     public void log() {
 
     }
@@ -86,7 +90,7 @@ public class HttpAspect extends BaseApi {
      * @author: jwy
      * @date: 2017/12/15
      */
-    @Around("execution(* com.wl.myshrio.controller..*(..)) && args(..,bindingResult)")
+    @Around("within(com.wl.myshrio.controller..*) && args(..,bindingResult)")
     public Object doAround(ProceedingJoinPoint pjp, BindingResult bindingResult) throws Throwable {
 
         shiroFilter(pjp);

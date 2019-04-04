@@ -25,7 +25,7 @@ public class AuthRealm extends AuthorizingRealm {
      * 用户
      */
     @Autowired
-    private UserService userService;
+     UserService userService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){

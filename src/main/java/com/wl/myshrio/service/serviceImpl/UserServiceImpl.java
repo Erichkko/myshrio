@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()*dto.getPageSize()).
+                    offset(dto.getStartPage() * dto.getPageSize()).
                     fetch();
         } else {
             fetch = dslContext.select(SYS_USER.ID,
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
                     and(SYS_USER.NICKNAME.like("%" + dto.getKeyword() + "%")).
                     limit(dto.getPageSize()).
-                    offset(dto.getStartPage()*dto.getPageSize()).
+                    offset(dto.getStartPage() * dto.getPageSize()).
                     fetch();
         }
 
@@ -150,16 +150,14 @@ public class UserServiceImpl implements UserService {
 
         Integer count;
         if (StringUtils.isEmpty(dto.getKeyword())) {
-            count = dslContext.selectCount(
-            ).
+            count = dslContext.selectCount().
                     from(SYS_USER).
                     leftJoin(SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID)).
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
                     where(SYS_ROLE.TYPE.eq(dto.getType())).
                     fetchOne(0, Integer.class);
         } else {
-            count = dslContext.selectCount(
-            ).
+            count = dslContext.selectCount().
                     from(SYS_USER).
                     leftJoin(SYS_USER_ROLE).on(SYS_USER.ID.eq(SYS_USER_ROLE.UID)).
                     leftJoin(SYS_ROLE).on(SYS_USER_ROLE.RID.eq(SYS_ROLE.ID)).
@@ -199,7 +197,7 @@ public class UserServiceImpl implements UserService {
                     .set(SYS_USER.EMAIL, sysUser.getEmail())
                     .set(SYS_USER.CREATE_TIME, sysUser.getCreateTime())
                     .set(SYS_USER.NICKNAME, sysUser.getNickname()).execute();
-            if (execute1 != 1){
+            if (execute1 != 1) {
                 return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
             }
 
@@ -207,7 +205,7 @@ public class UserServiceImpl implements UserService {
                     .set(SYS_USER_ROLE.ID, sysUserRole.getId())
                     .set(SYS_USER_ROLE.RID, sysUserRole.getRid())
                     .set(SYS_USER_ROLE.UID, sysUserRole.getUid()).execute();
-            if (execute !=1){
+            if (execute != 1) {
                 return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
             }
         } catch (Exception e) {
@@ -224,10 +222,10 @@ public class UserServiceImpl implements UserService {
         int execute = dslContext.update(SYS_USER).set(SYS_USER.STATUS, userVo.getType() == 0 ? 0L : 1L)
                 .where(SYS_USER.ID.eq(userVo.getId())).execute();
 
-        if (execute == 1){
-            return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
-        }else {
-            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(),EnumCode.EXCPTION_ERROR.getText());
+        if (execute == 1) {
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        } else {
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
         }
     }
 
@@ -237,7 +235,7 @@ public class UserServiceImpl implements UserService {
             dslContext.deleteFrom(SYS_USER).where(SYS_USER.ID.eq(id)).execute();
         }
 
-        return ResultUtil.result(EnumCode.OK.getValue(),EnumCode.OK.getText());
+        return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
     }
 
 }
