@@ -146,8 +146,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
        return dslContext.selectCount().
                 from(Tables.SYS_PERMISSION).
-                innerJoin(Tables.SYS_ROLE_PERMISSION).on(Tables.SYS_PERMISSION.ID.eq(Tables.SYS_ROLE_PERMISSION.RID)).
-                where(Tables.SYS_PERMISSION.URL.eq(url)).
+                innerJoin(Tables.SYS_ROLE_PERMISSION).on(Tables.SYS_PERMISSION.ID.eq(Tables.SYS_ROLE_PERMISSION.PID)).
+                where(Tables.SYS_PERMISSION.URL.eq(url),Tables.SYS_ROLE_PERMISSION.RID.eq(roleId)).
                 fetchOne(0,Integer.class);
 
     }
