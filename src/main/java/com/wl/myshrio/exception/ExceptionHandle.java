@@ -7,6 +7,7 @@ import com.wl.myshrio.generator.jooq.tables.pojos.SysOperatingRecord;
 import com.wl.myshrio.service.OperatingRecordService;
 import com.wl.myshrio.utils.LocalDateUtil;
 import com.wl.myshrio.utils.ResultUtil;
+import com.wl.myshrio.utils.UUIDUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ public class ExceptionHandle  extends BaseApi {
         String method = request.getMethod();
 
         SysOperatingRecord or = new SysOperatingRecord();
+        or.setId(UUIDUtil.getUUID());
         or.setRequesturl(request.getRequestURI());
         or.setRemoteaddr(remoteAddr);
         or.setMethod(method);
