@@ -2,10 +2,15 @@ package com.wl.myshrio.exception;
 
 import com.alibaba.fastjson.JSONArray;
 import com.wl.myshrio.Enum.EnumCode;
+import com.wl.myshrio.controller.base.BaseApi;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysOperatingRecord;
+import com.wl.myshrio.service.OperatingRecordService;
+import com.wl.myshrio.utils.LocalDateUtil;
 import com.wl.myshrio.utils.ResultUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @desc: 统一异常处理
@@ -21,10 +27,10 @@ import javax.servlet.http.HttpServletRequest;
  * @date: 2017/12/15
  */
 @ControllerAdvice
-public class ExceptionHandle  {
+public class ExceptionHandle  extends BaseApi {
 
-//    @Autowired
-//    private OperatingRecordService operatingRecordService;
+    @Autowired
+    private OperatingRecordService operatingRecordService;
 
     private final  static Logger log = LoggerFactory.getLogger(ExceptionHandle.class);
 
@@ -38,14 +44,14 @@ public class ExceptionHandle  {
         String remoteAddr = request.getRemoteAddr();
         String method = request.getMethod();
 
-//        OperatingRecord or = new OperatingRecord();
-//        or.setRequestUrl(request.getRequestURI());
-//        or.setRemoteAddr(remoteAddr);
-//        or.setMethod(method);
-//        or.setCreateTime(new Date());
-//        or.setUid(super.getUserId());
-//        or.setFlag("请求出错");
-//        operatingRecordService.insert(or);
+        SysOperatingRecord or = new SysOperatingRecord();
+        or.setRequesturl(request.getRequestURI());
+        or.setRemoteaddr(remoteAddr);
+        or.setMethod(method);
+        or.setCreateTime(LocalDateUtil.date2LocalDateTime(new Date()));
+        or.setUid(super.getUserId());
+        or.setFlag("请求出错");
+        operatingRecordService.insert(or);
 
 
         if (e instanceof MyException) {

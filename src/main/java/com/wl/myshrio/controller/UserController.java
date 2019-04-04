@@ -4,8 +4,10 @@ package com.wl.myshrio.controller;
 import com.alibaba.fastjson.JSON;
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.Enum.EnumRoleType;
+import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.UserDto;
+import com.wl.myshrio.model.vo.UserInfoVo;
 import com.wl.myshrio.model.vo.UserVo;
 import com.wl.myshrio.service.UserService;
 import com.wl.myshrio.utils.ResultUtil;
@@ -66,6 +68,17 @@ public class UserController {
             return ResultUtil.result(EnumCode.BAD_REQUEST.getValue(), EnumCode.BAD_REQUEST.getText());
         }
         return (String) userService.delUsers(dto);
+    }
+
+    @PostMapping(value = "/editUserInfo")
+    public String editUserInfo(UserInfoVo sysUser){
+
+        Integer integer = userService.editUserInfo(sysUser);
+        if (integer ==1){
+            return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
+        }else {
+            return ResultUtil.result(EnumCode.EXCPTION_ERROR.getValue(), EnumCode.EXCPTION_ERROR.getText());
+        }
     }
 
 }

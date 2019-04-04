@@ -2,11 +2,13 @@ package com.wl.myshrio.service.serviceImpl;
 
 import com.wl.myshrio.Enum.EnumCode;
 import com.wl.myshrio.generator.jooq.Tables;
+import com.wl.myshrio.generator.jooq.tables.daos.SysUserDao;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUser;
 import com.wl.myshrio.generator.jooq.tables.pojos.SysUserRole;
 import com.wl.myshrio.model.dto.ParamsDto;
 import com.wl.myshrio.model.dto.UserDto;
 import com.wl.myshrio.model.dto.UserInfoDto;
+import com.wl.myshrio.model.vo.UserInfoVo;
 import com.wl.myshrio.model.vo.UserVo;
 import com.wl.myshrio.service.UserService;
 import com.wl.myshrio.utils.LocalDateUtil;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -31,6 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     DSLContext dslContext;
+
+
+    @Autowired
+    SysUserDao sysUserDao;
 
 
     @Override
@@ -238,4 +245,25 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.result(EnumCode.OK.getValue(), EnumCode.OK.getText());
     }
 
+
+    @Transactional
+    @Override
+    public Integer editUserInfo(UserInfoVo userInfoVo) {
+
+        Integer result = 0;
+
+        try {
+            SysUser sysUser = sysUserDao.findById(userInfoVo.getId());
+            sysUser.setNickname(userInfoVo.getName());
+            sysUser.setEmail(userInfoVo.getEmail());
+            sysUser.setHeadPortraits(userInfoVo.getUserImg());
+
+            sysUserDao.update(sysUser);
+            result = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }
